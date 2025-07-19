@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple test script for the GPT Wrapper API
-Run this after starting the server to verify functionality
+Simple test script for the Answer Architect API
 """
 
 import requests
@@ -65,8 +64,8 @@ def test_root_endpoint():
     return result['status_code'] == 200
 
 def main():
-    """Run all tests"""
-    print("🚀 Starting GPT Wrapper API Tests")
+    """Main test function"""
+    print("🚀 Starting Answer Architect API Tests")
     print(f"Base URL: {BASE_URL}")
     print(f"API Token: {API_TOKEN[:10]}..." if len(API_TOKEN) > 10 else API_TOKEN)
     

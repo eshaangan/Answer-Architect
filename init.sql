@@ -1,4 +1,4 @@
--- Initialize the GPT Wrapper database
+-- Initialize the Answer Architect database
 
 CREATE TABLE IF NOT EXISTS prompt_logs (
     id SERIAL PRIMARY KEY,

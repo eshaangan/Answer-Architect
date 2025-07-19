@@ -1,221 +1,120 @@
-# GPT Wrapper API
+# Answer Architect API
 
-A sophisticated GPT wrapper system that refines user prompts internally before generating responses, providing enhanced AI interactions through intelligent prompt engineering.
+A sophisticated AI system that refines user prompts internally before generating responses, providing enhanced AI interactions through intelligent prompt engineering.
 
-## 🚀 Features
+## Features
 
-### Core Functionality
-- **Two-Stage Processing**: User input → GPT refinement → Final GPT response
-- **Intelligent Prompt Refinement**: Automatically improves vague or informal prompts
-- **Clean API**: Returns only final answers to users (debug mode available)
-- **Multiple Model Support**: Configurable GPT models for different stages
+- **Intelligent Prompt Refinement**: Automatically enhances user prompts for better AI responses
+- **Rate Limiting**: Built-in protection against API abuse
+- **Analytics**: Track usage and performance metrics
+- **Mock Mode**: Test without consuming API credits
+- **Health Monitoring**: Built-in health checks and status endpoints
 
-### Production Features
-- **Authentication**: Bearer token security
-- **Rate Limiting**: Configurable per-minute limits with IP tracking
-- **Database Logging**: PostgreSQL with graceful file fallback
-- **Performance Monitoring**: Request timing and analytics
-- **Health Monitoring**: Real-time API status and uptime tracking
-- **Mock Mode**: Testing without OpenAI API consumption
+## Quick Start
 
-### User Interface
-- **Modern React Frontend**: Clean, responsive design with Tailwind CSS
-- **Real-time Status**: API health monitoring
-- **Debug Mode**: Toggle to view prompt refinement process
-- **Analytics Dashboard**: Usage statistics and performance metrics
-- **Example Prompts**: Quick-start suggestions
-- **Performance Metrics**: Response timing display
-- **Response Styles**: Choose from concise, detailed, casual, professional, educational, or balanced tones
+### Prerequisites
 
-## 🏗️ Architecture
+- Python 3.8+
+- OpenAI API key
+- PostgreSQL (optional, for analytics)
 
-```
-User Input → Prompt Refinement (GPT) → Final Response (GPT) → User
-                     ↓
-            Logging & Analytics Database
-```
+### Installation
 
-## 📦 Installation
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/eshaangan/answer-architect.git
+   cd answer-architect
+   ```
 
-### Quick Start (Development)
-```bash
-# Clone and setup
-git clone <repository>
-cd gpt-wrapper
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# Backend setup
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+3. **Set up environment**
+   ```bash
+   cp env.example .env
+   # Edit .env with your OpenAI API key
+   ```
 
-# Frontend setup
-cd frontend
-npm install
-cd ..
+4. **Run the application**
+   ```bash
+   python start.py
+   ```
 
-# Configure environment
-cp env.example .env
-# Edit .env with your OpenAI API key and settings
+The API will be available at `http://localhost:8000`
 
-# Start development servers
-python start.py  # Backend on :8000
-cd frontend && npm start  # Frontend on :3000
-```
+## API Documentation
 
-## ⚙️ Configuration
+Once running, visit:
+- **Interactive Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+
+## Configuration
 
 ### Environment Variables
-```bash
-# OpenAI Configuration
+
+Create a `.env` file with:
+
+```env
 OPENAI_API_KEY=your_openai_api_key_here
-
-# Database (Optional - uses file logging if not provided)
-DATABASE_URL=postgresql://username:password@localhost:5432/gpt_wrapper
-
-# Security
-API_SECRET_KEY=your_secret_key_here
-
-# Rate Limiting
-RATE_LIMIT_PER_MINUTE=10
-
-# Model Configuration
-DEFAULT_MODEL=gpt-4o-mini
-REFINEMENT_MODEL=gpt-4o-mini
-
-# Development/Testing
+MODEL_NAME=gpt-4o-mini
 MOCK_MODE=false
+RATE_LIMIT_PER_MINUTE=60
+DATABASE_URL=postgresql://username:password@localhost:5432/answer_architect
 ```
 
-## 🔌 API Endpoints
+### Database Setup (Optional)
 
-### Main Endpoints
-- `POST /prompt` - Submit prompt, get refined response
-- `POST /prompt/debug` - Debug mode with full pipeline visibility
-- `GET /health` - Health check with uptime
-- `GET /analytics/stats` - Usage analytics (requires auth)
+For analytics features:
 
-### Authentication
-All endpoints require Bearer token authentication:
+```sql
+-- Run init.sql in your PostgreSQL database
+psql -d your_database -f init.sql
+```
+
+## Usage
+
+### Basic Prompt
+
 ```bash
-curl -H "Authorization: Bearer your_secret_key_here" \
-     -H "Content-Type: application/json" \
-     -d '{"text": "explain machine learning", "style": "concise"}' \
-     http://localhost:8000/prompt
+curl -X POST "http://localhost:8000/prompt" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Explain quantum computing"}'
 ```
 
-## 📊 Analytics & Monitoring
+### With Authentication
 
-### Available Metrics
-- Total requests processed
-- Requests in last 24 hours
-- Unique users (by IP)
-- Model usage statistics
-- System uptime
-- Response timing (refinement + generation)
-
-### Performance Tracking
-- Processing time breakdown
-- Mock vs live mode indicators
-- Real-time health status
-- Database connection status
-
-## 🛠️ Development
-
-### Project Structure
+```bash
+curl -X POST "http://localhost:8000/prompt" \
+  -H "Authorization: Bearer your_token" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Explain quantum computing"}'
 ```
-├── app/                    # Backend FastAPI application
-│   ├── main.py            # API endpoints and routing
-│   ├── gpt_service.py     # OpenAI integration with timing
-│   ├── config.py          # Environment configuration
-│   ├── database.py        # PostgreSQL logging with fallback
-│   ├── auth.py            # Bearer token authentication
-│   ├── rate_limiter.py    # IP-based rate limiting
-│   └── models.py          # Pydantic request/response models
-├── frontend/              # React TypeScript frontend
-│   ├── src/components/    # React components
-│   ├── src/services/      # API service layer
-│   └── src/types/         # TypeScript interfaces
-├── requirements.txt      # Python dependencies
-```
+
+## Development
 
 ### Running Tests
-```bash
-# Backend tests
-python -m pytest
 
-# Frontend tests
-cd frontend && npm test
+```bash
+python test_api.py
 ```
 
-### Mock Mode
-Enable mock mode for development without consuming OpenAI credits:
-```bash
-# In .env file
-MOCK_MODE=true
+### Project Structure
+
+```
+answer-architect/
+├── app/
+│   ├── main.py          # FastAPI application
+│   ├── gpt_service.py   # GPT interaction logic
+│   ├── config.py        # Configuration management
+│   └── analytics.py     # Analytics tracking
+├── frontend/            # React frontend
+├── start.py            # Startup script
+├── requirements.txt    # Python dependencies
+└── README.md          # This file
 ```
 
-Mock mode provides realistic responses with simulated processing times.
+## License
 
-## 🚀 Deployment Options
-
-### Manual Deployment
-```bash
-# Backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-
-# Frontend
-cd frontend && npm run build && npm run serve
-```
-
-### Cloud Deployment
-- AWS ECS/Fargate ready
-- Google Cloud Run compatible
-- Heroku deployment supported
-- Kubernetes manifests available
-
-## 📈 Monitoring & Observability
-
-### Health Checks
-- `/health` endpoint with uptime
-- Database connection status
-- OpenAI API connectivity
-- Real-time frontend status indicator
-
-### Logging
-- Structured JSON logging
-- Request/response tracking
-- Error monitoring
-- Performance metrics
-
-## 🔒 Security
-
-### Authentication
-- Bearer token authentication
-- Configurable API keys
-- IP-based rate limiting
-- Request validation
-
-### Best Practices
-- Environment variable configuration
-- Secure database connections
-- CORS configuration
-- Input sanitization
-
-## 📝 License
-
-MIT License - see LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📞 Support
-
-For issues and questions:
-- Create an issue in the repository
-- Check the documentation
-- Review the API docs at `/docs` 
+MIT License - see LICENSE file for details 

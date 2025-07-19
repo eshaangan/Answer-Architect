@@ -18,9 +18,11 @@ startup_time = time.time()
 
 # Create FastAPI app
 app = FastAPI(
-    title="GPT Wrapper API",
-    description="A GPT wrapper that refines user prompts before generating responses",
-    version="1.0.0"
+    title="Answer Architect API",
+    description="An AI system that refines user prompts before generating responses",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # Add rate limiter to app
@@ -194,16 +196,16 @@ async def get_analytics_stats(token: str = Depends(verify_token)):
 async def root():
     """Root endpoint with API information"""
     return {
-        "message": "GPT Wrapper API",
+        "message": "Answer Architect API",
         "version": "1.0.0",
         "endpoints": {
             "health": "/health",
-            "prompt": "/prompt",
+            "prompt": "/prompt", 
             "debug": "/prompt/debug",
             "analytics": "/analytics/stats"
         },
         "authentication": "Bearer token required",
-        "model": settings.default_model,
+        "model": settings.model_name,
         "mock_mode": settings.mock_mode,
         "uptime_seconds": time.time() - startup_time
     }

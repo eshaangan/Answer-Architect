@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for the GPT Wrapper API
+Startup script for the Answer Architect API
 """
 
 import os
@@ -38,7 +38,7 @@ def check_dependencies():
 
 def main():
     """Main startup function"""
-    print("🚀 Starting GPT Wrapper API")
+    print("🚀 Starting Answer Architect API")
     
     # Check environment
     if not check_env_file():
